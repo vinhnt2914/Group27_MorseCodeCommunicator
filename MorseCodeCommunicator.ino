@@ -1,4 +1,4 @@
-
+// Libraries used for this project
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
@@ -7,7 +7,7 @@
 
 AsyncWebServer server(80);
 
-const char* ssid = "P 802"; // Your WiFi SSID. This is our WiFi SSID and PW, when using this code pls change it to your WiFi!
+const char* ssid = "P 802"; // Your WiFi SSID. This SSID and Password is our, please enter yours when using this code. 
 const char* password = "123456789"; // Your WiFi Password
 
 //pin for button, led and buzzer
@@ -31,9 +31,6 @@ String serialDot = "*";
 boolean cheker = false;
 
 
-long lastDebounceTime = 0;  
-long debounceDelay = 50; // Debounce between button push
-
 String webCode = ""; // morse code for sending from webserver to arduino
 
 int len = 0;
@@ -53,7 +50,7 @@ void recvMsg(uint8_t *data, size_t len){
   WebSerial.println(d);
 }
 
-// Function for dot, dash LED + buzzer
+// Function for dot, dash and error of LED + buzzer
 void dot() {
   Serial.print(".");
   digitalWrite(led, HIGH);
@@ -75,7 +72,8 @@ void dash() {
 }
 
 void error(){
-  Serial.println("Unknown character!");
+  Serial.println();
+  Serial.print("Unknown character!");
   digitalWrite(buz, HIGH);
   delay(unit_delay*5);
   digitalWrite(buz, LOW);
