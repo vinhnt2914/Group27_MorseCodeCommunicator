@@ -7,7 +7,7 @@
 
 AsyncWebServer server(80);
 
-const char* ssid = "P 802"; // Your WiFi SSID
+const char* ssid = "P 802"; // Your WiFi SSID. This is our WiFi SSID and PW, when using this code pls change it to your WiFi!
 const char* password = "123456789"; // Your WiFi Password
 
 //pin for button, led and buzzer
