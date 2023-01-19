@@ -7,7 +7,7 @@
 
 AsyncWebServer server(80);
 
-const char* ssid = "s3979366"; // Your WiFi SSID. This is our team wifi, you can change it to SSID of your home wifi. Same with the pasword
+const char* ssid = "P 802"; // Your WiFi SSID
 const char* password = "123456789"; // Your WiFi Password
 
 //pin for button, led and buzzer
@@ -16,7 +16,7 @@ const int led = D4;
 const int buz = D5;
 
 int ledState = HIGH;       
-int buttonState = LOW;             
+int buttonState = LOW;               
 int lastButtonState = LOW;  
 
 int pause_value = 200;  // change this value according to your button-pushing speed
@@ -51,7 +51,6 @@ void recvMsg(uint8_t *data, size_t len){
   }
   webCode = d; // Asign the sent data to webCode to encode
   WebSerial.println(d);
-
 }
 
 // Function for dot, dash LED + buzzer
@@ -455,6 +454,67 @@ void zero()
   dash();
   delay(unit_delay*3);
 }
+
+void period(){
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay*3);
+}
+
+void question(){
+  dot();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay*3);
+}
+
+void comma(){
+  dash();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay*3);
+}
+
+void exclamation(){
+  dash();
+  delay(unit_delay);  
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dot();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay);
+  dash();
+  delay(unit_delay*3);
+}
+
 void unknown(){
   error();
 }
@@ -641,6 +701,26 @@ void morse() {
     nine();
     Serial.print(" ");
   }
+  else if (ch == '.')
+  {
+    period();
+    Serial.print(" ");
+  }
+  else if (ch == '?')
+  {
+    question();
+    Serial.print(" ");
+  }
+  else if (ch == ',')
+  {
+    comma();
+    Serial.print(" ");
+  }
+  else if (ch == '!')
+  {
+    exclamation();
+    Serial.print(" ");
+  }
 
   else if (ch == ' ') {
     delay(unit_delay * 7);
@@ -780,6 +860,18 @@ void printMorse(String morsecode)
   else if (morsecode=="******")
     {Serial.print("_");
     WebSerial.print(" ");}
+  else if (morsecode=="*-*-*-")
+    {Serial.print(".");
+    WebSerial.print(".");}
+  else if (morsecode=="**--**")
+    {Serial.print("?");
+    WebSerial.print("?");}
+  else if (morsecode=="--**--")
+    {Serial.print(",");
+    WebSerial.print(",");}
+  else if (morsecode=="-*-*--")
+    {Serial.print("!");
+    WebSerial.print("!");}
   else if (morsecode=="*******")
     {Serial.println();
     Serial.println("New Line: ");
@@ -816,11 +908,11 @@ void loop() {
     Serial.println();
   }
 
-    buttonState = digitalRead(buttonPin);
+  buttonState = digitalRead(buttonPin);
 
   
   
-  if (buttonState && lastButtonState)       // basic state machine depending on the state of the signal from the button
+  if (buttonState && lastButtonState)       //This happen when the button is held. 
   {
     ++signal_length;       
     if (signal_length<2*pause_value)        //this help to notice that there is a change in the signal length => its not a dot anymore but a dash
@@ -834,7 +926,6 @@ void loop() {
   }
   else if(!buttonState && lastButtonState)          //this part of the code happens when the button is released and it send either * or - into serialMorse
   {
-     
      if (signal_length>50 && signal_length<2*pause_value )
      {
        serialMorse =  serialMorse + serialDot;
@@ -843,17 +934,15 @@ void loop() {
       {
         serialMorse = serialMorse +  serialDash;
       }
-    signal_length=0; // reset signal length for next use
-    digitalWrite(13, LOW); 
+    signal_length=0; // reset signal length for next use 
     noTone(buz); 
   }
-  else if(buttonState && !lastButtonState)          // this part happens when the button is pressed again and it's use to reset several values for this next press
+  else if(buttonState && !lastButtonState)      // this part happens when the button is pressed. Reset pause and checker value for next use.
   {
     pause=0;
-    digitalWrite(13, HIGH);  
     cheker = true;
   }
-  else if (!buttonState && !lastButtonState)
+  else if (!buttonState && !lastButtonState)        // this part happens after the button is released. 
   {  
     ++pause;
     if (( pause>3*pause_value ) && (cheker))
