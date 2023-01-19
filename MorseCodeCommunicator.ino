@@ -7,7 +7,7 @@
 
 AsyncWebServer server(80);
 
-const char* ssid = "s3979366"; // Your WiFi SSID
+const char* ssid = "s3979366"; // Your WiFi SSID. This is our team wifi, you can change it to SSID of your home wifi. Same with the pasword
 const char* password = "123456789"; // Your WiFi Password
 
 //pin for button, led and buzzer
